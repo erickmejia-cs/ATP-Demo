@@ -23,13 +23,6 @@ A Next.js demo site powered by Contentstack with a homepage and news article pag
    npm run dev
    ```
 
-## Contentstack settings
-
-- API Key: `blt79254e1f9a1ecfb7`
-- Delivery Token: `csd925935b7e807b30c41c9826`
-- Preview Token: `cs9373481fe923a03c9bf37d86`
-- Branch: `main`
-
 ## Visual Experience
 
 Open the preview route with the configured preview token to enable Contentstack preview mode:
