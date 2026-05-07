@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(npx next *)",
+      "Bash(mkdir -p \"c:\\\\Users\\\\erick.mejia\\\\Documents\\\\ATP Demo\\\\app\\\\[locale]\\\\news\")",
+      "Bash(Remove-Item -Recurse -Force .git)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\erick.mejia\\Documents\\ATP Demo\\app\\[locale]\\news"
+    ]
+  }
+}
