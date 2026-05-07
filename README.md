@@ -22,13 +22,3 @@ A Next.js demo site powered by Contentstack with a homepage and news article pag
    ```bash
    npm run dev
    ```
-
-## Visual Experience
-
-Open the preview route with the configured preview token to enable Contentstack preview mode:
-
-```text
-http://localhost:3000/api/preview?token=cs9373481fe923a03c9bf37d86&slug=/
-```
-
-Then navigate the site to see preview content.
