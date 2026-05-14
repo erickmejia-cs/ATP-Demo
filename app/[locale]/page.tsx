@@ -1,13 +1,17 @@
+import { notFound } from 'next/navigation';
 import { getHomepage } from '@/lib/contentstack';
 import HomepageLiveView from '@/components/HomepageLiveView';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
-const locale = 'en-us';
-
-export async function generateMetadata(): Promise<Metadata> {
-  const homepage = await getHomepage(locale);
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  if (params.locale !== 'es') return {};
+  const homepage = await getHomepage('es');
   return {
     title: homepage?.seo?.meta_title || "ATP Tour – Men's Professional Tennis",
     description:
@@ -17,17 +21,21 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function HomePage({
+export default async function LocaleHomePage({
+  params,
   searchParams,
 }: {
+  params: { locale: string };
   searchParams: { live_preview?: string; [key: string]: string | string[] | undefined };
 }) {
+  if (params.locale !== 'es') notFound();
+
   const hash =
     typeof searchParams?.live_preview === 'string'
       ? searchParams.live_preview
       : undefined;
 
-  const homepage = await getHomepage(locale, hash);
+  const homepage = await getHomepage('es', hash);
 
   if (!homepage) {
     return (
@@ -38,5 +46,5 @@ export default async function HomePage({
     );
   }
 
-  return <HomepageLiveView initialData={homepage} locale={locale} />;
+  return <HomepageLiveView initialData={homepage} locale="es" />;
 }

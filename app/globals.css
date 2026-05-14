@@ -150,6 +150,36 @@ a:hover { text-decoration: underline; }
   border: 1px solid rgba(255,255,255,0.2);
 }
 
+.locale-picker {
+  appearance: none;
+  background: rgba(255,255,255,0.08) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,0.6)'/%3E%3C/svg%3E") no-repeat right 10px center;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-sm);
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 5px 28px 5px 10px;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.locale-picker:hover {
+  background-color: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.3);
+  color: #fff;
+}
+
+.locale-picker:focus {
+  outline: 2px solid var(--atp-blue);
+  outline-offset: 2px;
+}
+
+.locale-picker option {
+  background: var(--atp-header-bg);
+  color: #fff;
+}
+
 /* ─── Hero / Promo Banner ───────────────────────────────────── */
 
 .hero-banner {
@@ -662,6 +692,19 @@ a:hover { text-decoration: underline; }
   gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.app-store-badge-link {
+  display: inline-flex;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+.app-store-badge-link:hover { opacity: 0.85; }
+
+.app-store-badge-img {
+  height: 44px;
+  width: auto;
+  display: block;
 }
 
 .app-download-btn {

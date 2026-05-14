@@ -10,7 +10,8 @@ export async function generateMetadata({
 }: {
   params: { locale: string; slug: string };
 }): Promise<Metadata> {
-  const article = await getNewsArticleBySlug(params.slug, params.locale);
+  if (params.locale !== 'es') return {};
+  const article = await getNewsArticleBySlug(params.slug, 'es');
   if (!article) return { title: 'Article not found – ATP Tour' };
   return {
     title: article.seo?.meta_title || `${article.title} – ATP Tour`,
@@ -27,8 +28,14 @@ export default async function LocaleNewsArticlePage({
   params: { locale: string; slug: string };
   searchParams: { live_preview?: string; [key: string]: string | string[] | undefined };
 }) {
-  const { locale, slug } = params;
-  const hash = typeof searchParams?.live_preview === 'string' ? searchParams.live_preview : undefined;
+  if (params.locale !== 'es') notFound();
+
+  const locale = 'es';
+  const { slug } = params;
+  const hash =
+    typeof searchParams?.live_preview === 'string'
+      ? searchParams.live_preview
+      : undefined;
 
   const [article, latestArticles] = await Promise.all([
     getNewsArticleBySlug(slug, locale, hash),

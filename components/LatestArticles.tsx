@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { localizeUrl } from '@/lib/url';
 
 interface Article {
   uid?: string;
@@ -13,6 +14,7 @@ interface Article {
 }
 
 interface Props {
+  locale: string;
   heading?: string;
   headingCslp?: Record<string, string>;
   ctaLabel?: string;
@@ -30,6 +32,7 @@ interface Props {
 }
 
 export default function LatestArticles({
+  locale,
   heading,
   headingCslp,
   ctaLabel,
@@ -47,7 +50,7 @@ export default function LatestArticles({
 }: Props) {
   const bothTabs = showRelated && showMostRecent;
   const [activeTab, setActiveTab] = useState<'recent' | 'related'>(
-    showMostRecent ? 'recent' : 'related'
+    showRelated && relatedArticles.length > 0 ? 'related' : 'recent'
   );
 
   const isRelated = bothTabs ? activeTab === 'related' : showRelated;
@@ -89,7 +92,7 @@ export default function LatestArticles({
 
       {featured && (
         <Link
-          href={featured.url || '#'}
+          href={localizeUrl(featured.url, locale)}
           className="la-featured"
           {...(isRelated ? featured.cslpAttrs : undefined)}
         >
@@ -113,7 +116,7 @@ export default function LatestArticles({
               className="la-list-item"
               {...(isRelated ? article.cslpAttrs : undefined)}
             >
-              <Link href={article.url || '#'} className="la-item-link">
+              <Link href={localizeUrl(article.url, locale)} className="la-item-link">
                 {article.hero_image?.url ? (
                   <img src={article.hero_image.url} alt={article.title || ''} className="la-thumb" />
                 ) : (

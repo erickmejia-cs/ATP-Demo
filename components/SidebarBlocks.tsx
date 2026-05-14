@@ -1,6 +1,7 @@
 'use client';
 
 import LatestArticles from './LatestArticles';
+import { localizeUrl } from '@/lib/url';
 
 const SIDEBAR_BLOCK_TYPES = ['related_players', 'related_tournaments', 'news'] as const;
 type SidebarBlockType = (typeof SIDEBAR_BLOCK_TYPES)[number];
@@ -133,7 +134,7 @@ export default function SidebarBlocks({ blocks, latestArticles, entryUid, locale
             const showMostRecent = data.show_most_recent !== false;
             const newsAmount: number = data.recent_news_section?.news_amount ?? 5;
             const ctaPage = resolveRef(data.cta?.page);
-            const ctaHref = ctaPage?.url || undefined;
+            const ctaHref = ctaPage?.url ? localizeUrl(ctaPage.url, locale) : undefined;
 
             const relatedRaw: any[] = Array.isArray(data.related_news_section?.related_news)
               ? data.related_news_section.related_news
@@ -147,6 +148,7 @@ export default function SidebarBlocks({ blocks, latestArticles, entryUid, locale
             return (
               <div key={index} {...bCslp}>
                 <LatestArticles
+                  locale={locale}
                   heading={data.heading}
                   headingCslp={fCslp('heading')}
                   ctaLabel={data.cta?.label}

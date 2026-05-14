@@ -1,9 +1,12 @@
 import './globals.css';
 import { cookies } from 'next/headers';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import CSLivePreview from '@/components/CSLivePreview';
+import LocalePicker from '@/components/LocalePicker';
 import { getNavigation } from '@/lib/contentstack';
+import { localizePath, localizeUrl } from '@/lib/url';
 
 export const metadata: Metadata = {
   title: 'ATP Tour',
@@ -16,10 +19,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     cookieStore.get('__next_preview_data') || cookieStore.get('cs_preview')
   );
 
-  const nav = await getNavigation('en-us');
+  const locale = headers().get('x-locale') ?? 'en-us';
+  const nav = await getNavigation(locale);
   const logoUrl: string | undefined = nav?.logo?.url;
   const navUid: string | undefined = nav?.uid;
-  const navLocale = 'en-us';
+  const navLocale = locale;
   const navItems: { title: string; external_url?: string; page?: any }[] =
     Array.isArray(nav?.nav_items) ? nav.nav_items : [];
 
@@ -37,7 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <header className="site-header">
             <div className="header-inner">
 
-              <Link href="/" className="header-logo">
+              <Link href={localizePath('/', locale)} className="header-logo">
                 {logoUrl ? (
                   <img src={logoUrl} alt="ATP Tour" className="header-logo-img" {...navCslp('logo')} />
                 ) : (
@@ -48,7 +52,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <nav className="site-nav" aria-label="Main navigation" {...navCslp('nav_items')}>
                 {navItems.length > 0 ? (
                   navItems.map((item, i) => {
-                    const href = item.external_url ?? item.page?.url ?? '/';
+                    const rawHref = item.external_url ?? item.page?.url ?? '/';
+                    const href = item.external_url ? rawHref : localizeUrl(rawHref, locale);
                     const isAbsolute = href.startsWith('http');
                     return (
                       <a
@@ -64,15 +69,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 ) : (
                   // Fallback while nav entry is loading or not configured
                   <>
-                    <Link href="/">Home</Link>
-                    <Link href="/news">News</Link>
-                    <Link href="/#rankings">Rankings</Link>
-                    <Link href="/#tournaments">Tournaments</Link>
+                    <Link href={localizePath('/', locale)}>Home</Link>
+                    <Link href={localizePath('/news', locale)}>News</Link>
+                    <Link href={localizePath('/#rankings', locale)}>Rankings</Link>
+                    <Link href={localizePath('/#tournaments', locale)}>Tournaments</Link>
                   </>
                 )}
               </nav>
 
               <div className="header-actions">
+                <LocalePicker currentLocale={locale} />
                 {isPreview && <span className="preview-badge">Preview</span>}
               </div>
 
@@ -96,27 +102,27 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <div className="footer-nav-group">
                   <h3 className="footer-nav-heading">News</h3>
                   <ul>
-                    <li><Link href="/news">Latest News</Link></li>
-                    <li><Link href="/news">Match Reports</Link></li>
-                    <li><Link href="/news">Features</Link></li>
+                    <li><Link href={localizePath('/news', locale)}>Latest News</Link></li>
+                    <li><Link href={localizePath('/news', locale)}>Match Reports</Link></li>
+                    <li><Link href={localizePath('/news', locale)}>Features</Link></li>
                   </ul>
                 </div>
 
                 <div className="footer-nav-group">
                   <h3 className="footer-nav-heading">Players</h3>
                   <ul>
-                    <li><Link href="/#rankings">Rankings</Link></li>
-                    <li><Link href="/#players">Player Profiles</Link></li>
-                    <li><Link href="/#head2head">Head to Head</Link></li>
+                    <li><Link href={localizePath('/#rankings', locale)}>Rankings</Link></li>
+                    <li><Link href={localizePath('/#players', locale)}>Player Profiles</Link></li>
+                    <li><Link href={localizePath('/#head2head', locale)}>Head to Head</Link></li>
                   </ul>
                 </div>
 
                 <div className="footer-nav-group">
                   <h3 className="footer-nav-heading">Tournaments</h3>
                   <ul>
-                    <li><Link href="/#tournaments">Schedule</Link></li>
-                    <li><Link href="/#tournaments">Results</Link></li>
-                    <li><Link href="/#tournaments">Grand Slams</Link></li>
+                    <li><Link href={localizePath('/#tournaments', locale)}>Schedule</Link></li>
+                    <li><Link href={localizePath('/#tournaments', locale)}>Results</Link></li>
+                    <li><Link href={localizePath('/#tournaments', locale)}>Grand Slams</Link></li>
                   </ul>
                 </div>
               </div>

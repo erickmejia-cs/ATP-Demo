@@ -118,7 +118,7 @@ export async function getNewsArticleBySlug(slug: string, locale = defaultLanguag
     .replace(/^[a-z]{2}(?:-[a-z0-9]+)?\/news\//i, '')
     .replace(/^news\//, '');
 
-  const urlValue = `/${locale}/news/${normalizedSlug}`;
+  const urlValue = `/news/${normalizedSlug}`;
   const query = stack.ContentType('news_article').Query();
   query.language(locale);
   query.where('url', urlValue);

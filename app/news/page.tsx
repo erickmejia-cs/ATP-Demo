@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getLatestNewsPage, getNewsArticles } from '@/lib/contentstack';
 import { localizeUrl } from '@/lib/url';
@@ -6,6 +5,8 @@ import NewsCard from '@/components/NewsCard';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+const locale = 'en-us';
 
 function cslpAttr(entryUid: string | undefined, locale: string, field: string) {
   if (!entryUid) return {};
@@ -27,13 +28,8 @@ function sortArticles(articles: any[], sortOrder: string): any[] {
   }
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  if (params.locale !== 'es') return {};
-  const newsPage = await getLatestNewsPage('es');
+export async function generateMetadata(): Promise<Metadata> {
+  const newsPage = await getLatestNewsPage(locale);
   return {
     title: newsPage?.seo?.meta_title || `${newsPage?.title || 'Latest News'} – ATP Tour`,
     description: newsPage?.seo?.meta_description || newsPage?.intro || 'ATP Tour latest news.',
@@ -41,16 +37,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function LocaleNewsPage({
-  params,
+export default async function LatestNewsPage({
   searchParams,
 }: {
-  params: { locale: string };
   searchParams: { page?: string; [key: string]: string | string[] | undefined };
 }) {
-  if (params.locale !== 'es') notFound();
-
-  const locale = 'es';
   const currentPage = Math.max(1, Number(searchParams?.page) || 1);
 
   const [newsPage, allArticles] = await Promise.all([
@@ -135,13 +126,13 @@ export default async function LocaleNewsPage({
         {totalPages > 1 && (
           <nav className="news-pagination" aria-label="Pagination">
             {safePage > 1 && (
-              <Link href={`/es/news?page=${safePage - 1}`} className="news-pagination-btn">
+              <Link href={`/news?page=${safePage - 1}`} className="news-pagination-btn">
                 ← Previous
               </Link>
             )}
             <span className="news-pagination-info">Page {safePage} of {totalPages}</span>
             {safePage < totalPages && (
-              <Link href={`/es/news?page=${safePage + 1}`} className="news-pagination-btn">
+              <Link href={`/news?page=${safePage + 1}`} className="news-pagination-btn">
                 Next →
               </Link>
             )}

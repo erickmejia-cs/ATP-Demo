@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import NewsCard from './NewsCard';
+import { localizeUrl, localizePath } from '@/lib/url';
 import TournamentCarousel from './TournamentCarousel';
 
 interface BlockProps {
@@ -141,7 +142,7 @@ export default function SectionBlocks({
             <h2 className="atp-section-title" {...fCslp('heading')}>
               {data.heading}
             </h2>
-            <Link href="/news" className="atp-section-link">
+            <Link href={localizePath('/news', locale)} className="atp-section-link">
               All News →
             </Link>
           </div>
@@ -167,7 +168,7 @@ export default function SectionBlocks({
                   summary={a?.summary}
                   imageUrl={a?.hero_image?.url}
                   publishDate={a?.publish_date}
-                  url={a?.url || `/news/${getSlug(a)}`}
+                  url={a?.url ? localizeUrl(a.url, locale) : localizePath(`/news/${getSlug(a)}`, locale)}
                   entryUid={a?.uid}
                   locale={locale}
                   cslpAttrs={itemCslp}
@@ -190,7 +191,7 @@ export default function SectionBlocks({
             <h2 className="atp-section-title" {...fCslp('heading')}>
               {data?.heading}
             </h2>
-            <Link href="/#rankings" className="atp-section-link">
+            <Link href={localizePath('/#rankings', locale)} className="atp-section-link">
               Full Rankings →
             </Link>
           </div>
@@ -310,7 +311,7 @@ export default function SectionBlocks({
             <h2 className="atp-section-title" {...fCslp('heading')}>
               {data.heading}
             </h2>
-            <Link href="/#tournaments" className="atp-section-link">
+            <Link href={localizePath('/#tournaments', locale)} className="atp-section-link">
               Full Schedule →
             </Link>
           </div>
@@ -319,7 +320,9 @@ export default function SectionBlocks({
       );
     }
 
-    case 'app_download':
+    case 'app_download': {
+      const appleImageUrl = data.apple_app_store_image?.url;
+      const googleImageUrl = data.google_play_image?.url;
       return (
         <section className="atp-section app-download" {...bCslp}>
           <h2 {...fCslp('heading')}>{data.heading}</h2>
@@ -328,24 +331,47 @@ export default function SectionBlocks({
             {data.apple_app_store_link && (
               <a
                 href={data.apple_app_store_link.href || '#'}
-                className="app-download-btn"
+                className={appleImageUrl ? 'app-store-badge-link' : 'app-download-btn'}
+                target="_blank"
+                rel="noreferrer"
                 {...fCslp('apple_app_store_link')}
               >
-                🍎 {data.apple_app_store_link.title || 'App Store'}
+                {appleImageUrl ? (
+                  <img
+                    src={appleImageUrl}
+                    alt={data.apple_app_store_link.title || 'Download on the App Store'}
+                    className="app-store-badge-img"
+                    {...fCslp('apple_app_store_image')}
+                  />
+                ) : (
+                  <>🍎 {data.apple_app_store_link.title || 'App Store'}</>
+                )}
               </a>
             )}
             {data.google_play_link && (
               <a
                 href={data.google_play_link.href || '#'}
-                className="app-download-btn"
+                className={googleImageUrl ? 'app-store-badge-link' : 'app-download-btn'}
+                target="_blank"
+                rel="noreferrer"
                 {...fCslp('google_play_link')}
               >
-                ▶ {data.google_play_link.title || 'Google Play'}
+                {googleImageUrl ? (
+                  <img
+                    src={googleImageUrl}
+                    alt={data.google_play_link.title || 'Get it on Google Play'}
+                    className="app-store-badge-img"
+                    {...fCslp('google_play_image')}
+                  />
+                ) : (
+                  <>▶ {data.google_play_link.title || 'Google Play'}</>
+                )}
               </a>
             )}
           </div>
         </section>
       );
+    }
 
     default:
       return null;
